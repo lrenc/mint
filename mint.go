@@ -19,7 +19,7 @@ func system(s string) {
     cmd.Stdout = &out
     err := cmd.Run()
     if err != nil {
-        fmt.Println(err)
+        fmt.Println("err", err)
     }
     fmt.Println(out.String())
 }
@@ -45,8 +45,10 @@ func main() {
 
     for _, curr := range list {
         num := rand.Intn(10)
-        str := "echo '" + curr + strconv.Itoa(rand.intn(1000000)) +"' > realwork.txt; git add realwork.txt; GIT_AUTHOR_DATE='" + curr + "' GIT_COMMITTER_DATE='" + curr + "' git commit -m 'update';"
-        system(str)
+        str := "echo '" + curr + strconv.Itoa(rand.Intn(1000000)) + "' > realwork.txt; git add realwork.txt; GIT_AUTHOR_DATE='" + curr + "' GIT_COMMITTER_DATE='" + curr + "' git commit -m 'update';"
+        for i := 0; i < num; i ++ {
+            system(str)
+        }
     }
     system("git push")
     system("git rm realwork.txt; git commit -m 'delete'; git push;")
