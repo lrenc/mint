@@ -11,6 +11,8 @@ import (
     "math/rand"
 )
 
+const layout = "2006-1-2"
+
 // 执行系统命令
 func system(s string) {
     cmd := exec.Command("/bin/sh", "-c", s)
@@ -35,6 +37,16 @@ func today() string {
     return strings.Join(list, "-")
 }
 
+// 将字符串转换成Time
+func parser(str string) string {
+    t, err := time.Parse(layout, str)
+    if err != nil {
+        fmt.Println(err)
+        return time.Now().Format(time.RFC1123Z)
+    }
+    return t.Format(time.RFC1123Z)
+}
+
 func main() {
     date := flag.String("date", today(), "date")
     flag.Parse()
@@ -43,10 +55,11 @@ func main() {
     list = strings.Split(*date, ",")
     fmt.Println(list)
 
-    for _, curr := range list {
+    for _, item := range list {
+        cur := parser(item)
         num := rand.Intn(10)
-        str := "echo '" + curr + strconv.Itoa(rand.Intn(1000000)) + "' > realwork.txt; git add realwork.txt; GIT_AUTHOR_DATE='" + curr + "' GIT_COMMITTER_DATE='" + curr + "' git commit -m 'update';"
         for i := 0; i < num; i ++ {
+            str := "echo '" + cur + strconv.Itoa(rand.Intn(1000000)) + "' > realwork.txt; git add realwork.txt; GIT_AUTHOR_DATE='" + cur + "' GIT_COMMITTER_DATE='" + cur + "' git commit -m 'update'"
             system(str)
         }
     }
